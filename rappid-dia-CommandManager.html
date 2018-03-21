@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Rappid dia CommandManager</title>
+    <link rel="stylesheet" type="text/css" href="rappid/rappid.min.css">
+    <script type="text/javascript" src="rappid/jquery.js"></script>
+    <script type="text/javascript" src="rappid/lodash.js"></script>
+    <script type="text/javascript" src="rappid/backbone.js"></script>
+    <script type="text/javascript" src="rappid/rappid.min.js"></script>
+</head>
+<body>
+<div>
+    <button id="btn-undo">undo</button>
+    <button id="btn-redo">redo</button>
+    <br>
+    <span>Move elements around and press undo/redo to see how the actions are undone/redone.</span>
+    <br>
+    <div id="paper" style="width: 800px;height: 360px;padding:0;margin:0;border: 1px solid red"></div>
+</div>
+<script type="text/javascript">
+    var graph = new joint.dia.Graph;
+    var paper = new joint.dia.Paper({
+        el: $('#paper').css('width', 800),
+        width: 800,
+        height: 360,
+        gridSize: 1,
+        model: graph
+    });
+
+    var commandManager = new joint.dia.CommandManager({graph: graph});
+
+    var r = new joint.shapes.basic.Rect({
+        position: {x: 50, y: 50}, size: {width: 90, height: 60},
+        attrs: {rect: {fill: '#31D0C6', stroke: '#4B4A67', 'stroke-width': 8}, text: {text: 'rect', fill: 'white'}}
+    });
+
+    var c = new joint.shapes.basic.Circle({
+        position: {x: 220, y: 150}, size: {width: 100, height: 60},
+        attrs: {
+            circle: {fill: '#FE854F', 'stroke-width': 8, stroke: '#4B4A67'},
+            text: {text: 'ellipse', fill: 'white'}
+        }
+    });
+
+    graph.addCells([r, c]);
+
+    $('#btn-undo').on('click', _.bind(commandManager.undo, commandManager));
+    $('#btn-redo').on('click', _.bind(commandManager.redo, commandManager));
+</script>
+</body>
+</html>
